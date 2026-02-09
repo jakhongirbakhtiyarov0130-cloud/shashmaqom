@@ -28,7 +28,12 @@ const maqoms = [
             "Tonika: Re (D) notasi",
             "Temuriylar davri ruhi",
             "Falsafiy teranlik va salobat"
-        ]
+        ],
+        instrumentInfo: {
+            name: "Tanbur",
+            desc: "Shashmaqomning yuragi va tonallik asosi hisoblangan bu cholg'u, o'zining uzun dastasi va pardalari orqali maqomning murakkab ladlarini mukammal ifodalaydi.",
+            history: "To'rt metall torli va tut yog'ochidan yasalgan tanbur, qadimdan saroy musiqasining yetakchisi bo'lib kelgan. Uning sadosi inson ovoziga hamohang bo'lib, maqom ijrosida yetakchilik qiladi.",
+        }
     },
     {
         id: "rost",
@@ -48,7 +53,12 @@ const maqoms = [
             "Samimiyat va ishonch",
             "Pakiylik va rostlik yo'li",
             "Insoniy komillik ramzi"
-        ]
+        ],
+        instrumentInfo: {
+            name: "Dutor",
+            desc: "\"Ikki tor\" ma'nosini anglatuvchi, ipak torli va mayin ovozli bu cholg'u, soddaligiga qaramay, o'zbek musiqasining chuqur falsafasini o'zida jamlagan.",
+            history: "XV asrlardan beri ma'lum bo'lgan dutor, dastlab cho'ponlar hamrohi bo'lgan, keyinchalik Shashmaqom ansamblining ajralmas va nufuzli qismiga aylangan.",
+        }
     },
     {
         id: "navo",
@@ -68,7 +78,12 @@ const maqoms = [
             "Kompozitorlar ilhom manbai",
             "Ruhiy halovat va sokinlik",
             "Oshiq qalb nolasi"
-        ]
+        ],
+        instrumentInfo: {
+            name: "Nay",
+            desc: "Inson nafasining kuyga aylanishi. Uning sehrli va nola qiluvchi ovozi tinglovchini ruhiy poklanish va ilohiy mushohadaga chorlaydi.",
+            history: "Eng qadimiy puflama cholg'ulardan biri. Tasavvuf falsafasida nay nolasini inson ruhining o'z asliga – Yaratganga qaytish istagi va sog'inchi bilan qiyoslashgan.",
+        }
     },
     {
         id: "dugoh",
@@ -88,7 +103,12 @@ const maqoms = [
             "Yangi kun nafasi",
             "G'ayrat va harakat",
             "Bahoriy kayfiyat"
-        ]
+        ],
+        instrumentInfo: {
+            name: "G'ijjak",
+            desc: "Kamonli cholg'u bo'lib, uning nolasi inson yig'isi va kulgusini eslatadi. Maqom ansamblida kuyni bog'lab turuvchi va unga uzviylik beruvchi asosiy vositadir.",
+            history: "Sharq miniatyuralarida ko'p tasvirlangan g'ijjak, o'zining o'tkir va shirali ovozi bilan maqom kuyining ta'sirchanligini oshiradi va boshqa cholg'ular bilan mukammal uyg'unlashadi.",
+        }
     },
     {
         id: "segoh",
@@ -108,7 +128,12 @@ const maqoms = [
             "Sevgi va visol onlari",
             "Qalb tug'yonlari",
             "Ishqiy sarguzashtlar"
-        ]
+        ],
+        instrumentInfo: {
+            name: "Qashqar Rubobi",
+            desc: "Teri qoplamali, jarangdor va aks-sadoli torli cholg'u. Uning o'tkir ovozi maqomlarning avj qismlarida va ritmik usullarida o'zgacha kuch bag'ishlaydi.",
+            history: "Qadimiy tarixi VII asrlarga borib taqaladi. Shashmaqom ijrosida rubob o'zining yorqin timbri va ijro imkoniyatlari bilan ansamblga jo'shqinlik olib kiradi.",
+        }
     },
     {
         id: "iroq",
@@ -128,12 +153,18 @@ const maqoms = [
             "Sog'inch va hijron",
             "Chuqur ma'noli nola",
             "Tarix saboqlari"
-        ]
+        ],
+        instrumentInfo: {
+            name: "Doira",
+            desc: "Maqomning yurak urishi (ritmi). Usulsiz maqom bo'lmaydi, doira esa o'zining rang-barang zarblari bilan kuyning vaznini va ruhini belgilab beradi.",
+            history: "Uzum yoki yong'oq yog'ochidan yasalib, metall halqachalar o'rnatilgan qadimiy zarbli cholg'u. U asrlar davomida mumtoz musiqamizning ritmik asosi bo'lib xizmat qilgan.",
+        }
     },
 ];
 
 export default function OrbitalMenu() {
     const [activeId, setActiveId] = useState<string | null>(null);
+    const [activeInstrument, setActiveInstrument] = useState<any | null>(null);
     const [mounted, setMounted] = useState(false);
     const [isHovering, setIsHovering] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -241,14 +272,25 @@ export default function OrbitalMenu() {
                                     style={{ animation: `spin ${maqom.speed} linear infinite` }}
                                 >
                                     <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                                        <div className="relative group/sat">
+                                        <div className="relative group/sat pointer-events-auto">
                                             {/* Satellite Instrument Image */}
-                                            <div className="w-6 h-6 md:w-10 md:h-10 p-1 md:p-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.2)] flex items-center justify-center backdrop-blur-sm transform hover:scale-125 transition-transform duration-300">
+                                            <div
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setActiveInstrument({ ...maqom.instrumentInfo, img: maqom.instrumentImg });
+                                                }}
+                                                className="w-6 h-6 md:w-10 md:h-10 p-1 md:p-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.2)] flex items-center justify-center backdrop-blur-sm transform hover:scale-125 transition-transform duration-300 cursor-pointer hover:bg-amber-500/30"
+                                            >
                                                 <img
                                                     src={maqom.instrumentImg}
                                                     alt="Instrument"
                                                     className="w-full h-full object-contain filter drop-shadow-[0_0_2px_rgba(245,158,11,0.8)]"
                                                 />
+                                            </div>
+
+                                            {/* Tooltip on Hover */}
+                                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover/sat:opacity-100 transition-opacity whitespace-nowrap bg-black/80 px-2 py-1 rounded border border-amber-500/30 text-[10px] text-amber-500 uppercase tracking-widest pointer-events-none">
+                                                {maqom.instrumentInfo.name}
                                             </div>
                                         </div>
                                     </div>
@@ -258,6 +300,51 @@ export default function OrbitalMenu() {
                     );
                 })}
             </div>
+
+            {/* Instrument Modal */}
+            <AnimatePresence>
+                {activeInstrument && (
+                    <motion.div
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                        onClick={() => setActiveInstrument(null)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
+                            className="bg-black/90 border border-amber-500/30 p-8 rounded-2xl max-w-md w-full relative shadow-[0_0_50px_rgba(245,158,11,0.2)]"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <button
+                                onClick={() => setActiveInstrument(null)}
+                                className="absolute top-4 right-4 text-amber-500/50 hover:text-amber-500"
+                            >
+                                <X />
+                            </button>
+
+                            <div className="flex flex-col items-center text-center space-y-6">
+                                <div className="w-32 h-32 p-4 rounded-full bg-gradient-to-br from-amber-500/10 to-transparent border border-amber-500/30 shadow-[0_0_30px_rgba(245,158,11,0.1)] flex items-center justify-center">
+                                    <img
+                                        src={activeInstrument.img}
+                                        alt={activeInstrument.name}
+                                        className="w-full h-full object-contain filter drop-shadow-[0_5px_5px_rgba(0,0,0,0.5)]"
+                                    />
+                                </div>
+
+                                <div>
+                                    <h3 className="text-3xl font-serif text-amber-500 mb-2">{activeInstrument.name}</h3>
+                                    <p className="text-sm text-amber-200/50 uppercase tracking-widest">Milliy Cholg'u</p>
+                                </div>
+
+                                <div className="space-y-4 text-gray-300 font-light text-sm leading-relaxed">
+                                    <p>{activeInstrument.desc}</p>
+                                    <div className="w-10 h-[1px] bg-amber-500/30 mx-auto"></div>
+                                    <p className="italic text-gray-400">{activeInstrument.history}</p>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* Focus Mode (Zoomed In View) */}
             <AnimatePresence>
