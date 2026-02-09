@@ -178,12 +178,12 @@ export default function OrbitalMenu() {
                 {!activeId && (
                     <motion.div
                         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                        className="absolute z-10 text-center pointer-events-none overflow-visible top-[60%] -translate-y-1/2"
+                        className="absolute z-10 text-center pointer-events-none overflow-visible top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
                     >
-                        <h1 className="text-4xl md:text-9xl font-serif text-transparent bg-clip-text bg-gradient-to-b from-amber-200 via-yellow-500 to-amber-800 tracking-widest drop-shadow-2xl pb-6 overflow-visible">
+                        <h1 className="text-4xl md:text-9xl font-serif text-transparent bg-clip-text bg-gradient-to-b from-amber-200 via-yellow-500 to-amber-800 tracking-widest drop-shadow-2xl overflow-visible">
                             SHASHMAQOM
                         </h1>
-                        <p className="text-xs md:text-lg text-amber-500/80 mt-4 mb-8 tracking-[0.5em] uppercase font-light pb-8 block overflow-visible mx-auto" style={{ lineHeight: '2' }}>
+                        <p className="text-xs md:text-lg text-amber-500/80 mt-4 tracking-[0.5em] uppercase font-light block overflow-visible mx-auto">
                             Raqamli Meros
                         </p>
                     </motion.div>
@@ -194,16 +194,16 @@ export default function OrbitalMenu() {
             <div className={`relative transition-all duration-1000 ease-in-out ${activeId ? 'scale-150 blur-sm opacity-20 pointer-events-none' : 'scale-100'}`}>
 
                 {/* Tech Rings */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] md:w-[600px] md:h-[600px] rounded-full border border-amber-500/10 animate-spin-slow pointer-events-none">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] md:w-[640px] md:h-[640px] rounded-full border border-amber-500/10 animate-spin-slow pointer-events-none">
                     <div className="absolute top-0 left-1/2 w-1.5 h-1.5 md:w-2 md:h-2 bg-amber-500/50 rounded-full shadow-[0_0_10px_orange]"></div>
                 </div>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] md:w-[800px] md:h-[800px] rounded-full border border-amber-500/5 border-dashed animate-[spin_60s_linear_infinite_reverse] pointer-events-none"></div>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[440px] h-[440px] md:w-[880px] md:h-[880px] rounded-full border border-amber-500/5 border-dashed animate-[spin_60s_linear_infinite_reverse] pointer-events-none"></div>
 
                 {/* Planets */}
                 {maqoms.map((maqom, index) => {
                     // Mobile-responsive radius
                     const isMobile = mounted && window.innerWidth < 768;
-                    const radius = isMobile ? 150 : 320;
+                    const radius = isMobile ? 160 : 320;
                     const radian = (maqom.angle * Math.PI) / 180;
                     const x = Math.cos(radian) * radius;
                     const y = Math.sin(radian) * radius;
@@ -214,8 +214,8 @@ export default function OrbitalMenu() {
                             className="absolute top-1/2 left-1/2"
                             style={{
                                 transform: `translate(${x}px, ${y}px)`,
-                                marginLeft: isMobile ? -30 : -40,
-                                marginTop: isMobile ? -30 : -40
+                                marginLeft: isMobile ? -32 : -48,
+                                marginTop: isMobile ? -32 : -48
                             }}
                         >
                             <motion.button
