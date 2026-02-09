@@ -2,11 +2,11 @@ export const shashmaqomData = {
     buzruk: {
         name: "Buzruk",
         tracks: [
-            { id: "0001", title: "SARAXBORI BUZRUK" },
-            { id: "0002", title: "I-II-III-IV-V-VI taronalar" },
-            { id: "0003", title: "Talqin uzzol" },
-            { id: "0004", title: "Tarona" },
-            { id: "0005", title: "Nasrulloi" },
+            { id: "0001", title: "SARAXBORI BUZRUK", driveId: "1ujydp0tTfxgsrWRe1Uh7EReWSij4FmGH" },
+            { id: "0002", title: "I-II-III-IV-V-VI taronalar", driveId: "1ujydp0tTfxgsrWRe1Uh7EReWSij4FmGH" },
+            { id: "0003", title: "Talqin uzzol", driveId: "1ujydp0tTfxgsrWRe1Uh7EReWSij4FmGH" },
+            { id: "0004", title: "Tarona", driveId: "" },
+            { id: "0005", title: "Nasrulloi", driveId: "" },
             { id: "0006", title: "I-II-III taronalar" },
             { id: "0007", title: "MO‘G‘ULCHAI BUZRUK" },
             { id: "0008", title: "Talqinchai mo‘g‘ulchai buzruk" },

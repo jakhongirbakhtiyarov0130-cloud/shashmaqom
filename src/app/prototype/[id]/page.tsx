@@ -7,18 +7,130 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { shashmaqomData } from "@/data/maqomData";
 
+interface Track {
+    id: string;
+    title: string;
+    driveId?: string;
+    url?: string;
+}
+
+interface Maqom {
+    name: string;
+    tracks: Track[];
+}
+
 export default function MaqomPrototype() {
     const params = useParams();
     const id = params.id as string;
-    const maqom = shashmaqomData[id as keyof typeof shashmaqomData] || shashmaqomData["buzruk"];
+    const maqom = (shashmaqomData as Record<string, Maqom>)[id] || shashmaqomData["buzruk"];
 
     const [activeTab, setActiveTab] = useState<"text" | "score" | "analysis">("text");
     const [currentTrack, setCurrentTrack] = useState(maqom.tracks[0]);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [progress, setProgress] = useState(30); // Mock progress
+    const [currentTime, setCurrentTime] = useState(0);
+    const [duration, setDuration] = useState(0);
     const [volume, setVolume] = useState(70);
     const [isDraggingVolume, setIsDraggingVolume] = useState(false);
+
+    const audioRef = useRef<HTMLAudioElement>(null);
     const volumeRef = useRef<HTMLDivElement>(null);
+
+    // Google Drive Direct Link Helper
+    const getAudioUrl = (track: Track | null) => {
+        if (!track || !track.driveId) return "";
+        const cleanId = track.driveId.trim();
+        // Using drive.google.com format which is generally more stable
+        const url = `https://drive.google.com/uc?export=download&id=${cleanId}`;
+        console.log("Loading Audio URL:", url);
+        return url;
+    };
+
+    useEffect(() => {
+        if (audioRef.current) {
+            audioRef.current.volume = volume / 100;
+        }
+    }, [volume]);
+
+    useEffect(() => {
+        const audio = audioRef.current;
+        if (!audio) return;
+
+        const url = getAudioUrl(currentTrack);
+        if (!url) return;
+
+        // Force reload the source
+        audio.load();
+
+        if (isPlaying) {
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(e => {
+                    console.error("Playback failed:", e);
+                    setIsPlaying(false);
+                });
+            }
+        }
+    }, [currentTrack]);
+
+    useEffect(() => {
+        const audio = audioRef.current;
+        if (!audio) return;
+
+        if (isPlaying) {
+            audio.play().catch(e => {
+                console.error("Play toggle failed:", e);
+                setIsPlaying(false);
+            });
+        } else {
+            audio.pause();
+        }
+    }, [isPlaying]);
+
+    const formatTime = (time: number) => {
+        if (isNaN(time) || !isFinite(time)) return "00:00";
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60);
+        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    };
+
+    const handleTimeUpdate = () => {
+        if (audioRef.current) {
+            setCurrentTime(audioRef.current.currentTime);
+        }
+    };
+
+    const handleLoadedMetadata = () => {
+        if (audioRef.current) {
+            setDuration(audioRef.current.duration);
+        }
+    };
+
+    const handleAudioError = (e: React.SyntheticEvent<HTMLAudioElement, Event>) => {
+        const audio = audioRef.current;
+        let errorMsg = "Noma'lum xatolik";
+        if (audio && audio.error) {
+            switch (audio.error.code) {
+                case 1: errorMsg = "Yuklash to'xtatildi (Aborted)"; break;
+                case 2: errorMsg = "Tarmoq xatosi (Network error)"; break;
+                case 3: errorMsg = "Dekodlash xatosi (Decode error)"; break;
+                case 4: errorMsg = "Manba qo'llab-quvvatlanmaydi (Source not supported)"; break;
+            }
+            console.error("Audio Error Details:", audio.error.code, audio.error.message);
+        }
+        console.error("Audio Load Event Error:", e);
+        setIsPlaying(false);
+        // alert(`Audio xatosi: ${errorMsg}`);
+    };
+
+    const handleProgressChange = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!audioRef.current || !duration) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const percentage = x / rect.width;
+        const newTime = percentage * duration;
+        audioRef.current.currentTime = newTime;
+        setCurrentTime(newTime);
+    };
 
     // Global Event Listener for smooth dragging outside the component
     useEffect(() => {
@@ -56,11 +168,22 @@ export default function MaqomPrototype() {
         }
     };
 
-    // Audio Mockup
+    // Audio Controls
     const togglePlay = () => setIsPlaying(!isPlaying);
 
     return (
         <div className="h-screen bg-[#050505] text-white flex flex-col font-sans overflow-hidden selection:bg-amber-500/30">
+            <audio
+                key={currentTrack?.id}
+                ref={audioRef}
+                src={getAudioUrl(currentTrack)}
+                onTimeUpdate={handleTimeUpdate}
+                onLoadedMetadata={handleLoadedMetadata}
+                onEnded={() => setIsPlaying(false)}
+                onError={handleAudioError}
+                crossOrigin="anonymous"
+                preload="auto"
+            />
             {/* Cinematic Noise & Fog Background */}
             <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.03] animate-noise mix-blend-overlay bg-noise"></div>
             <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-amber-500/05 blur-[150px] rounded-full pointer-events-none" />
@@ -76,7 +199,7 @@ export default function MaqomPrototype() {
                     </div>
 
                     <div className="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-0.5">
-                        {maqom.tracks.map((track: any, idx: number) => (
+                        {maqom.tracks.map((track: Track, idx: number) => (
                             <button
                                 key={track.id}
                                 onClick={() => { setCurrentTrack(track); setIsPlaying(true); }}
@@ -219,14 +342,20 @@ export default function MaqomPrototype() {
                     </div>
                     {/* Progress Bar */}
                     <div className="w-full flex items-center gap-3 text-xs font-mono text-gray-500">
-                        <span>01:12</span>
-                        <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden relative group cursor-pointer">
+                        <span>{formatTime(currentTime)}</span>
+                        <div
+                            className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden relative group cursor-pointer"
+                            onClick={handleProgressChange}
+                        >
                             <div className="absolute inset-0 bg-white/5 group-hover:bg-white/10 transition-colors" />
-                            <div className="h-full bg-amber-500 w-[30%] relative">
+                            <div
+                                className="h-full bg-amber-500 relative"
+                                style={{ width: `${(currentTime / duration) * 100}%` }}
+                            >
                                 <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full opacity-0 group-hover:opacity-100 shadow-lg" />
                             </div>
                         </div>
-                        <span>04:35</span>
+                        <span>{formatTime(duration)}</span>
                     </div>
                     <div className="mt-1 text-xs text-amber-500/80 truncate max-w-[300px] font-medium animate-pulse">
                         {currentTrack.title}
