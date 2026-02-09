@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 15, 23, 42;
+    /* Deep Blue start */
+    --background-end-rgb: 30, 41, 59;
+    /* Slightly darker */
+
+    --primary: 212 100% 50%;
+    /* Adjust as needed */
+    --primary-foreground: 0 0% 100%;
+
+    /* Custom Maqom Colors */
+    --maqom-blue: #0F172A;
+    --maqom-gold: #F59E0B;
+    --maqom-gold-dim: #D97706;
+    --maqom-white: #F8FAFC;
+}
+
+body {
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(to bottom,
+            transparent,
+            rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    text-rendering: geometricPrecision;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prevent text clipping globally */
+* {
+    overflow-wrap: normal;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span {
+    overflow: visible !important;
+}
+
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+
+    .glasslam {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .glass-card {
+        @apply bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl shadow-lg transition-all duration-300 hover:bg-white/10 hover:border-white/20;
+    }
+
+    .text-gold {
+        color: var(--maqom-gold);
+    }
+
+    .text-gradient {
+        background: linear-gradient(to right, var(--maqom-gold), var(--maqom-white));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .bg-noise {
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48ZmlsdGVyIGlkPSJnoiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjY1IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2cpIiBvcGFjaXR5PSIwLjUiLz48L3N2Zz4=");
+    }
+}
+
+/* ThreeJS container styles */
+canvas {
+    touch-action: none;
+}

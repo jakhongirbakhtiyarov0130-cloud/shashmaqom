@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Round Resonance Body -->
+  <circle cx="50" cy="82" r="14" stroke="#f59e0b" stroke-width="2.5" />
+  <circle cx="50" cy="82" r="12" stroke="#f59e0b" stroke-width="0.5" stroke-dasharray="2 2" opacity="0.5" />
+
+  <!-- Curved Horns (Kashgar Rubob style) -->
+  <!-- Left Horn -->
+  <path d="M47 62 C 32 58, 32 75, 40 76" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" fill="none" />
+  <!-- Right Horn -->
+  <path d="M53 62 C 68 58, 68 75, 60 76" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" fill="none" />
+  
+  <!-- Decoration on Horns -->
+  <circle cx="36" cy="68" r="1" fill="#f59e0b" />
+  <circle cx="64" cy="68" r="1" fill="#f59e0b" />
+
+  <!-- Long Neck -->
+  <path d="M47 15 L 47 62" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" />
+  <path d="M53 15 L 53 62" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" />
+  
+  <!-- Headstock / Pegbox (Angled back) -->
+  <path d="M47 15 L 44 5 L 56 5 L 53 15 Z" stroke="#f59e0b" stroke-width="2" stroke-linejoin="round" fill="none" />
+  
+  <!-- Tuning Pegs -->
+  <line x1="44" y1="8" x2="40" y2="8" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" />
+  <line x1="44" y1="12" x2="40" y2="12" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" />
+  <line x1="56" y1="8" x2="60" y2="8" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" />
+  <line x1="56" y1="12" x2="60" y2="12" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" />
+
+  <!-- Frets (High density) -->
+  <line x1="47" y1="20" x2="53" y2="20" stroke="#f59e0b" stroke-width="1" />
+  <line x1="47" y1="25" x2="53" y2="25" stroke="#f59e0b" stroke-width="1" />
+  <line x1="47" y1="30" x2="53" y2="30" stroke="#f59e0b" stroke-width="1" />
+  <line x1="47" y1="35" x2="53" y2="35" stroke="#f59e0b" stroke-width="1" />
+  <line x1="47" y1="40" x2="53" y2="40" stroke="#f59e0b" stroke-width="1" />
+  <line x1="47" y1="45" x2="53" y2="45" stroke="#f59e0b" stroke-width="1" />
+  <line x1="47" y1="50" x2="53" y2="50" stroke="#f59e0b" stroke-width="1" />
+  <line x1="47" y1="55" x2="53" y2="55" stroke="#f59e0b" stroke-width="1" />
+
+  <!-- Strings -->
+  <line x1="49" y1="5" x2="49" y2="88" stroke="#f59e0b" stroke-width="0.8" opacity="0.6" />
+  <line x1="51" y1="5" x2="51" y2="88" stroke="#f59e0b" stroke-width="0.8" opacity="0.6" />
+
+  <!-- Bridge -->
+  <path d="M46 88 L 54 88" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" />
+</svg>

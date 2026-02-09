@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Body Shape: Large Pear/Teardrop shape, wider at bottom -->
+  <path d="M50 96 C 36 96, 25 85, 25 72 C 25 60, 42 50, 48 45 L 48 10" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M50 96 C 64 96, 75 85, 75 72 C 75 60, 58 50, 52 45 L 52 10" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- Neck (Filling the gap between the body contours) -->
+  <line x1="48" y1="10" x2="52" y2="10" stroke="#f59e0b" stroke-width="2.5" />
+  
+  <!-- Simple Headstock -->
+  <path d="M48 10 L 47 2 L 53 2 L 52 10" stroke="#f59e0b" stroke-width="2" stroke-linejoin="round" />
+
+  <!-- Two Tuning Pegs (One on side, simple) -->
+  <line x1="47" y1="5" x2="43" y2="5" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" />
+  <line x1="53" y1="7" x2="57" y2="7" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" />
+
+  <!-- Two Strings -->
+  <line x1="49" y1="2" x2="49" y2="85" stroke="#f59e0b" stroke-width="0.8" opacity="0.6" />
+  <line x1="51" y1="2" x2="51" y2="85" stroke="#f59e0b" stroke-width="0.8" opacity="0.6" />
+
+  <!-- Tied Frets (Simple horizontal lines on neck) -->
+  <line x1="48" y1="15" x2="52" y2="15" stroke="#f59e0b" stroke-width="1" />
+  <line x1="48" y1="22" x2="52" y2="22" stroke="#f59e0b" stroke-width="1" />
+  <line x1="48" y1="29" x2="52" y2="29" stroke="#f59e0b" stroke-width="1" />
+  <line x1="48" y1="36" x2="52" y2="36" stroke="#f59e0b" stroke-width="1" />
+  <line x1="48" y1="43" x2="52" y2="43" stroke="#f59e0b" stroke-width="1" />
+
+  <!-- Bridge -->
+  <rect x="46" y="85" width="8" height="2" fill="#f59e0b" />
+  
+  <!-- Decorative/Structural center line or rib stripes on bowl -->
+  <path d="M50 96 Q 50 80 50 50" stroke="#f59e0b" stroke-width="0.5" stroke-dasharray="2 2" opacity="0.5" />
+</svg>

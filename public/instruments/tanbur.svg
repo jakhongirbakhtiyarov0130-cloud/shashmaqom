@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Body Shape: Pear-shaped, slightly elongated -->
+  <path d="M48 62 C 48 62 38 68 32 78 C 28 85 30 92 38 96 C 45 99 55 99 62 96 C 70 92 72 85 68 78 C 62 68 52 62 52 62" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- Neck: Very long and thin -->
+  <path d="M48 62 L 48 10" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" />
+  <path d="M52 62 L 52 10" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" />
+  
+  <!-- Headstock -->
+  <path d="M48 10 L 46 2 L 54 2 L 52 10" stroke="#f59e0b" stroke-width="2" stroke-linejoin="round" />
+  
+  <!-- Tuning Pegs (visible on sides) -->
+  <line x1="48" y1="4" x2="44" y2="4" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="52" y1="6" x2="56" y2="6" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="48" y1="8" x2="44" y2="8" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="52" y1="3" x2="56" y2="3" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" />
+
+  <!-- Strings running down -->
+  <line x1="50" y1="2" x2="50" y2="88" stroke="#f59e0b" stroke-width="0.8" opacity="0.6" />
+  
+  <!-- Frets - characteristic of Tanbur -->
+  <line x1="48" y1="15" x2="52" y2="15" stroke="#f59e0b" stroke-width="1" />
+  <line x1="48" y1="20" x2="52" y2="20" stroke="#f59e0b" stroke-width="1" />
+  <line x1="48" y1="25" x2="52" y2="25" stroke="#f59e0b" stroke-width="1" />
+  <line x1="48" y1="30" x2="52" y2="30" stroke="#f59e0b" stroke-width="1" />
+  <line x1="48" y1="35" x2="52" y2="35" stroke="#f59e0b" stroke-width="1" />
+  <line x1="48" y1="40" x2="52" y2="40" stroke="#f59e0b" stroke-width="1" />
+  <line x1="48" y1="45" x2="52" y2="45" stroke="#f59e0b" stroke-width="1" />
+  <line x1="48" y1="50" x2="52" y2="50" stroke="#f59e0b" stroke-width="1" />
+  <line x1="48" y1="55" x2="52" y2="55" stroke="#f59e0b" stroke-width="1" />
+
+  <!-- Bridge -->
+  <path d="M46 86 L 54 86" stroke="#f59e0b" stroke-width="3" stroke-linecap="round" />
+
+  <!-- Sound holes (small decorative) -->
+  <circle cx="50" cy="74" r="1.5" fill="#f59e0b" />
+  <circle cx="45" cy="80" r="1" fill="#f59e0b" opacity="0.8" />
+  <circle cx="55" cy="80" r="1" fill="#f59e0b" opacity="0.8" />
+</svg>
