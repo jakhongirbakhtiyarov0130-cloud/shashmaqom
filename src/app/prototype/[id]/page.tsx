@@ -2,10 +2,11 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Music, FileText, Info, BarChart2, ArrowLeft, Play, Pause, SkipBack, SkipForward, ListMusic, Disc, Volume2 } from "lucide-react";
+import { Music, FileText, Info, BarChart2, ArrowLeft, Play, Pause, SkipBack, SkipForward, ListMusic, Disc, Volume2, X, Mic } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { shashmaqomData } from "@/data/maqomData";
+import { PitchTrainer } from "@/components/PitchTrainer";
 
 interface Track {
     id: string;
@@ -24,13 +25,14 @@ export default function MaqomPrototype() {
     const id = params.id as string;
     const maqom = (shashmaqomData as Record<string, Maqom>)[id] || shashmaqomData["buzruk"];
 
-    const [activeTab, setActiveTab] = useState<"text" | "score" | "analysis">("text");
+    const [activeTab, setActiveTab] = useState<"text" | "score" | "analysis" | "practice">("text");
     const [currentTrack, setCurrentTrack] = useState(maqom.tracks[0]);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [volume, setVolume] = useState(70);
     const [isDraggingVolume, setIsDraggingVolume] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const audioRef = useRef<HTMLAudioElement>(null);
     const volumeRef = useRef<HTMLDivElement>(null);
@@ -189,20 +191,46 @@ export default function MaqomPrototype() {
             <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-amber-500/05 blur-[150px] rounded-full pointer-events-none" />
 
             {/* === MAIN LAYOUT === */}
-            <main className="flex-1 flex relative mt-6 mx-6 mb-4 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-black/40 backdrop-blur-sm">
+            <main className="flex-1 flex relative mt-4 md:mt-6 mx-4 md:mx-6 mb-2 md:mb-4 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-black/40 backdrop-blur-sm">
+
+                {/* Mobile Sidebar Overlay */}
+                <AnimatePresence>
+                    {isSidebarOpen && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setIsSidebarOpen(false)}
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm z-30 md:hidden"
+                        />
+                    )}
+                </AnimatePresence>
 
                 {/* === LEFT SIDEBAR: TRACK LIST (Compact) === */}
-                <aside className="w-80 bg-black/40 backdrop-blur-sm border-r border-white/5 flex flex-col shrink-0 absolute md:static inset-y-0 left-0 z-40 transform transition-transform duration-300 md:translate-x-0 -translate-x-full">
-                    <div className="p-4 border-b border-white/5 flex items-center gap-2 text-amber-500/80">
-                        <ListMusic className="w-4 h-4" />
-                        <span className="text-xs font-bold tracking-[0.2em] uppercase">Treklar ({maqom.tracks.length})</span>
+                <aside className={`
+                    w-72 md:w-80 bg-black/90 md:bg-black/40 backdrop-blur-xl md:backdrop-blur-sm border-r border-white/5 flex flex-col shrink-0 
+                    absolute md:static inset-y-0 left-0 z-40 transform transition-transform duration-500 ease-out
+                    ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+                `}>
+                    <div className="p-4 border-b border-white/5 flex items-center justify-between text-amber-500/80">
+                        <div className="flex items-center gap-2">
+                            <ListMusic className="w-4 h-4" />
+                            <span className="text-xs font-bold tracking-[0.2em] uppercase">Treklar ({maqom.tracks.length})</span>
+                        </div>
+                        <button onClick={() => setIsSidebarOpen(false)} className="md:hidden p-1 hover:bg-white/10 rounded">
+                            <X className="w-5 h-5" />
+                        </button>
                     </div>
 
                     <div className="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-0.5">
                         {maqom.tracks.map((track: Track, idx: number) => (
                             <button
                                 key={track.id}
-                                onClick={() => { setCurrentTrack(track); setIsPlaying(true); }}
+                                onClick={() => {
+                                    setCurrentTrack(track);
+                                    setIsPlaying(true);
+                                    if (window.innerWidth < 768) setIsSidebarOpen(false);
+                                }}
                                 className={`
                                     w-full text-left px-4 py-3 rounded hover:bg-white/5 border-l-2 transition-all duration-200 flex items-center gap-3
                                     ${currentTrack.id === track.id
@@ -226,58 +254,73 @@ export default function MaqomPrototype() {
                 <section className="flex-1 flex flex-col relative bg-gradient-to-br from-gray-900/50 to-black/50 overflow-hidden">
 
                     {/* Tabs Navigation */}
-                    <div className="flex justify-center border-b border-white/5 bg-black/20">
-                        {[
-                            { id: "text", label: "Matn", icon: FileText },
-                            { id: "score", label: "Nota", icon: BarChart2 },
-                            { id: "analysis", label: "Tahlil", icon: Info },
-                        ].map((tab) => (
-                            <button
-                                key={tab.id}
-                                onClick={() => setActiveTab(tab.id as any)}
-                                className={`
-                                    px-8 py-4 flex items-center gap-2 text-sm uppercase tracking-widest transition-all relative
-                                    ${activeTab === tab.id ? 'text-amber-500' : 'text-gray-500 hover:text-gray-300'}
-                                `}
-                            >
-                                <tab.icon className="w-4 h-4" />
-                                <span className="hidden sm:inline">{tab.label}</span>
-                                {activeTab === tab.id && (
-                                    <motion.div layoutId="activeTabLine" className="absolute bottom-0 left-0 w-full h-0.5 bg-amber-500 shadow-[0_0_10px_orange]" />
-                                )}
-                            </button>
-                        ))}
+                    <div className="flex justify-center border-b border-white/5 bg-black/20 overflow-x-auto no-scrollbar">
+                        <div className="flex min-w-max">
+                            {[
+                                { id: "text", label: "Matn", icon: FileText },
+                                { id: "score", label: "Nota", icon: BarChart2 },
+                                { id: "analysis", label: "Tahlil", icon: Info },
+                                { id: "practice", label: "Mashq", icon: Mic },
+                            ].map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id as any)}
+                                    className={`
+                                        px-4 md:px-8 py-4 flex items-center gap-2 text-[10px] md:text-sm uppercase tracking-widest transition-all relative
+                                        ${activeTab === tab.id ? 'text-amber-500' : 'text-gray-500 hover:text-gray-300'}
+                                    `}
+                                >
+                                    <tab.icon className="w-3 h-3 md:w-4 md:h-4" />
+                                    <span>{tab.label}</span>
+                                    {activeTab === tab.id && (
+                                        <motion.div layoutId="activeTabLine" className="absolute bottom-0 left-0 w-full h-0.5 bg-amber-500 shadow-[0_0_10px_orange]" />
+                                    )}
+                                </button>
+                            ))}
+                        </div>
                     </div>
 
                     {/* Scrollable Content Area */}
-                    <div className="flex-1 overflow-y-auto p-8 lg:p-12 custom-scrollbar">
+                    <div className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-12 custom-scrollbar">
                         <AnimatePresence mode="wait">
+                            {activeTab === 'practice' && (
+                                <motion.div
+                                    key="practice"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 20 }}
+                                    className="max-w-5xl mx-auto pb-20"
+                                >
+                                    <PitchTrainer />
+                                </motion.div>
+                            )}
                             {activeTab === 'text' && (
                                 <motion.div
                                     key="text"
                                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                                    className="max-w-3xl mx-auto text-center space-y-8 pb-20"
+                                    className="max-w-3xl mx-auto text-center space-y-4 md:space-y-8 pb-20"
                                 >
-                                    <div className="w-20 h-20 mx-auto rounded-full bg-amber-500/10 flex items-center justify-center mb-6 border border-amber-500/20">
-                                        <FileText className="w-8 h-8 text-amber-500" />
+                                    <div className="w-16 h-16 md:w-20 md:h-20 mx-auto rounded-full bg-amber-500/10 flex items-center justify-center mb-4 md:mb-6 border border-amber-500/20">
+                                        <FileText className="w-6 h-6 md:w-8 md:h-8 text-amber-500" />
                                     </div>
-                                    <h2 className="text-3xl md:text-4xl font-serif text-amber-500/90">{currentTrack.title}</h2>
-                                    <div className="space-y-6 text-lg md:text-xl font-light text-gray-300 leading-relaxed italic opacity-90">
+                                    <h2 className="text-xl md:text-4xl font-serif text-amber-500/90 leading-tight">{currentTrack.title}</h2>
+                                    <div className="space-y-4 md:space-y-6 text-base md:text-xl font-light text-gray-300 leading-relaxed italic opacity-90">
                                         <p>Ey chehrayi ziboyo,</p>
                                         <p>Meni devona kard.</p>
                                         <p>Husningga bo'lib shaydo,</p>
                                         <p>Meni afsona kard.</p>
-                                        <br />
+                                        <div className="my-4" />
                                         <p>Yuzing guli rayhondur,</p>
                                         <p>Ko'zing dardi darmondur.</p>
                                         <p>Ishqingda bu dil qondur,</p>
                                         <p>Meni mastona kard.</p>
 
-                                        <div className="w-16 h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent mx-auto my-8" />
-                                        <p className="text-sm text-gray-500 non-italic tracking-widest uppercase">Alisher Navoiy G'azali</p>
+                                        <div className="w-16 h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent mx-auto my-6 md:my-8" />
+                                        <p className="text-[10px] md:text-sm text-gray-500 non-italic tracking-widest uppercase">Alisher Navoiy G'azali</p>
                                     </div>
                                 </motion.div>
                             )}
+                            {/* ... Rest of tabs ... */}
 
                             {activeTab === 'score' && (
                                 <motion.div
@@ -315,33 +358,39 @@ export default function MaqomPrototype() {
             </main>
 
             {/* === FIXED BOTTOM PLAYER BAR === */}
-            <header className="h-auto py-3 bg-black/80 backdrop-blur-xl border border-white/10 flex items-center justify-between px-6 z-50 shrink-0 mb-6 mx-6 rounded-2xl shadow-2xl">
+            <header className="h-auto py-2 md:py-3 bg-black/80 backdrop-blur-xl border border-white/10 flex items-center justify-between px-4 md:px-6 z-50 shrink-0 mb-4 md:mb-6 mx-4 md:mx-6 rounded-2xl shadow-2xl">
 
                 {/* 1. Left: Back & Title */}
-                <div className="flex items-center gap-6 w-1/4">
+                <div className="flex items-center gap-3 md:gap-6 w-auto md:w-1/4">
+                    <button
+                        onClick={() => setIsSidebarOpen(true)}
+                        className="md:hidden p-2 text-gray-400 hover:text-amber-500 transition-colors"
+                    >
+                        <ListMusic className="w-5 h-5" />
+                    </button>
                     <Link href="/" className="group flex items-center gap-2 text-gray-400 hover:text-amber-500 transition-colors">
-                        <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                        <ArrowLeft className="w-4 h-4 md:w-5 md:h-5 group-hover:-translate-x-1 transition-transform" />
                     </Link>
-                    <div className="hidden md:block">
-                        <h1 className="text-xl font-serif text-amber-500 tracking-wide">{maqom.name}</h1>
-                        <span className="text-xs text-gray-500 uppercase tracking-widest">Maqomi</span>
+                    <div className="hidden sm:block">
+                        <h1 className="text-sm md:text-xl font-serif text-amber-500 tracking-wide truncate max-w-[100px] md:max-w-none">{maqom.name}</h1>
+                        <span className="text-[10px] text-gray-500 uppercase tracking-widest hidden md:block">Maqomi</span>
                     </div>
                 </div>
 
                 {/* 2. Center: Player Controls */}
-                <div className="flex-1 flex flex-col items-center max-w-2xl px-4">
-                    <div className="flex items-center gap-6 mb-2">
-                        <button className="text-gray-400 hover:text-white transition-colors"><SkipBack className="w-5 h-5" /></button>
+                <div className="flex-1 flex flex-col items-center max-w-2xl px-2 md:px-4">
+                    <div className="flex items-center gap-4 md:gap-6 mb-1 md:mb-2">
+                        <button className="text-gray-400 hover:text-white transition-colors"><SkipBack className="w-4 h-4 md:w-5 md:h-5" /></button>
                         <button
                             onClick={togglePlay}
-                            className="w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-amber-500 text-black flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-[0_0_15px_rgba(245,158,11,0.4)]"
+                            className="w-9 h-9 md:w-12 md:h-12 rounded-full bg-amber-500 text-black flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-[0_0_15px_rgba(245,158,11,0.4)]"
                         >
-                            {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-1" />}
+                            {isPlaying ? <Pause className="w-4 h-4 md:w-5 md:h-5 fill-current" /> : <Play className="w-4 h-4 md:w-5 md:h-5 fill-current ml-1" />}
                         </button>
-                        <button className="text-gray-400 hover:text-white transition-colors"><SkipForward className="w-5 h-5" /></button>
+                        <button className="text-gray-400 hover:text-white transition-colors"><SkipForward className="w-4 h-4 md:w-5 md:h-5" /></button>
                     </div>
                     {/* Progress Bar */}
-                    <div className="w-full flex items-center gap-3 text-xs font-mono text-gray-500">
+                    <div className="w-full flex items-center gap-2 md:gap-3 text-[9px] md:text-xs font-mono text-gray-500">
                         <span>{formatTime(currentTime)}</span>
                         <div
                             className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden relative group cursor-pointer"
@@ -357,14 +406,14 @@ export default function MaqomPrototype() {
                         </div>
                         <span>{formatTime(duration)}</span>
                     </div>
-                    <div className="mt-1 text-xs text-amber-500/80 truncate max-w-[300px] font-medium animate-pulse">
+                    <div className="mt-1 text-[10px] md:text-xs text-amber-500/80 truncate max-w-[150px] md:max-w-[300px] font-medium text-center">
                         {currentTrack.title}
                     </div>
                 </div>
 
                 {/* 3. Right: Volume & Extras */}
-                <div className="w-1/4 flex items-center justify-end gap-4">
-                    <div className="relative group flex items-center justify-center">
+                <div className="w-auto md:w-1/4 flex items-center justify-end gap-2 md:gap-4">
+                    <div className="relative group hidden sm:flex items-center justify-center">
                         {/* Hover Expander Area - Invisible trigger zone */}
                         <div className="absolute bottom-0 w-10 h-32 hidden group-hover:block z-40" />
 
@@ -393,7 +442,7 @@ export default function MaqomPrototype() {
                             className="p-2 text-gray-400 hover:text-white transition-colors relative z-50 active:scale-95"
                             onClick={() => setVolume(volume === 0 ? 70 : 0)}
                         >
-                            <Volume2 className={`w-5 h-5 transition-colors ${volume === 0 ? 'text-gray-600' : volume > 70 ? 'text-amber-500' : 'text-gray-400'}`} />
+                            <Volume2 className={`w-4 h-4 md:w-5 md:h-5 transition-colors ${volume === 0 ? 'text-gray-600' : volume > 70 ? 'text-amber-500' : 'text-gray-400'}`} />
                         </button>
                     </div>
                 </div>

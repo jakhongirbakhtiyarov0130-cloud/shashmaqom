@@ -194,14 +194,16 @@ export default function OrbitalMenu() {
             <div className={`relative transition-all duration-1000 ease-in-out ${activeId ? 'scale-150 blur-sm opacity-20 pointer-events-none' : 'scale-100'}`}>
 
                 {/* Tech Rings */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[600px] md:h-[600px] rounded-full border border-amber-500/10 animate-spin-slow pointer-events-none">
-                    <div className="absolute top-0 left-1/2 w-2 h-2 bg-amber-500/50 rounded-full shadow-[0_0_10px_orange]"></div>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] md:w-[600px] md:h-[600px] rounded-full border border-amber-500/10 animate-spin-slow pointer-events-none">
+                    <div className="absolute top-0 left-1/2 w-1.5 h-1.5 md:w-2 md:h-2 bg-amber-500/50 rounded-full shadow-[0_0_10px_orange]"></div>
                 </div>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] md:w-[800px] md:h-[800px] rounded-full border border-amber-500/5 border-dashed animate-[spin_60s_linear_infinite_reverse] pointer-events-none"></div>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] md:w-[800px] md:h-[800px] rounded-full border border-amber-500/5 border-dashed animate-[spin_60s_linear_infinite_reverse] pointer-events-none"></div>
 
                 {/* Planets */}
                 {maqoms.map((maqom, index) => {
-                    const radius = 320; // Fixed radius for desktop
+                    // Mobile-responsive radius
+                    const isMobile = mounted && window.innerWidth < 768;
+                    const radius = isMobile ? 150 : 320;
                     const radian = (maqom.angle * Math.PI) / 180;
                     const x = Math.cos(radian) * radius;
                     const y = Math.sin(radian) * radius;
@@ -212,13 +214,14 @@ export default function OrbitalMenu() {
                             className="absolute top-1/2 left-1/2"
                             style={{
                                 transform: `translate(${x}px, ${y}px)`,
-                                marginLeft: -40, marginTop: -40 // Center 80px element
+                                marginLeft: isMobile ? -30 : -40,
+                                marginTop: isMobile ? -30 : -40
                             }}
                         >
                             <motion.button
                                 layoutId={`planet-${maqom.id}`}
                                 onClick={() => setActiveId(maqom.id)}
-                                className="group relative w-20 h-20 md:w-24 md:h-24 rounded-full focus:outline-none"
+                                className="group relative w-16 h-16 md:w-24 md:h-24 rounded-full focus:outline-none"
                                 whileHover={{ scale: 1.2 }}
                             >
                                 {/* Golden Planet Core */}
@@ -227,20 +230,20 @@ export default function OrbitalMenu() {
                                     <div className="absolute bottom-0 inset-x-0 h-1/2 bg-black/20 blur-md" />
 
                                     {/* Engraved Text inside the Gold */}
-                                    <span className="relative z-10 text-[10px] md:text-xs font-serif font-bold text-amber-900 tracking-widest uppercase opacity-80 drop-shadow-[0_1px_1px_rgba(255,255,255,0.5)]">
+                                    <span className="relative z-10 text-[8px] md:text-xs font-serif font-bold text-amber-900 tracking-[0.1em] md:tracking-widest uppercase opacity-80 drop-shadow-[0_1px_1px_rgba(255,255,255,0.5)]">
                                         {maqom.name}
                                     </span>
                                 </div>
 
                                 {/* Instrument Orbit Satellite */}
                                 <div
-                                    className="absolute inset-[-35px] rounded-full border border-amber-500/5 pointer-events-none"
+                                    className="absolute inset-[-25px] md:inset-[-35px] rounded-full border border-amber-500/5 pointer-events-none"
                                     style={{ animation: `spin ${maqom.speed} linear infinite` }}
                                 >
                                     <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
                                         <div className="relative group/sat">
                                             {/* Satellite Instrument Image */}
-                                            <div className="w-8 h-8 md:w-10 md:h-10 p-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.2)] flex items-center justify-center backdrop-blur-sm transform hover:scale-125 transition-transform duration-300">
+                                            <div className="w-6 h-6 md:w-10 md:h-10 p-1 md:p-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.2)] flex items-center justify-center backdrop-blur-sm transform hover:scale-125 transition-transform duration-300">
                                                 <img
                                                     src={maqom.instrumentImg}
                                                     alt="Instrument"
